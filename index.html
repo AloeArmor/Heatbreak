@@ -50,7 +50,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 <button class="btn" onclick="urge()">Тянет написать или проверить</button>
 <div class="mu" style="margin:-2px 0 8px">Нажми, когда хочется ей написать или заглянуть в онлайн. Запишу время и помогу переждать.</div>
 <div class="card"><div class="hf" style="font-size:18px">Как ты сейчас?</div>
-<div class="row" id="mood" style="margin:8px 0"></div><div class="mu" id="moodnote">1 — тяжко, 5 — нормально</div></div>
+<div class="row" id="mood" style="margin:8px 0"></div><div class="mu" id="moodnote">1 — тяжко, 5 — нормально</div><div id="moodhist"></div></div>
 <div class="card"><div class="hf" style="font-size:18px">Задание дня</div><div class="mu" id="task"></div></div>
 <div class="card"><div class="hf" style="font-size:18px">Ближайший опасный час</div><div class="mu" id="next"></div></div>
 <button class="btn o" onclick="slipOpen()">Сорвался</button>
@@ -146,6 +146,7 @@ function hist(){var h=new Array(24).fill(0);S.urges.forEach(function(t){h[new Da
 function peaks(){if(S.urges.length<5)return[];var h=hist(),mx=Math.max.apply(null,h);if(mx<2)return[];var o=[];h.forEach(function(v,i){if(v>=Math.max(2,mx*.6))o.push(i)});return o}
 function nextPeak(){var p=peaks();if(!p.length)return null;var h=new Date().getHours();for(var i=0;i<24;i++){var x=(h+i)%24;if(p.indexOf(x)>-1)return{h:x,today:h+i<24}}return null}
 
+function calm(){$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];$("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, добавь их на вкладке «Причины».";breathe()}
 function urge(){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];
 $("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, добавь их на вкладке «Причины».";breathe();render()}
 var tm=null;function breathe(){clearInterval(tm);var c=$("circ"),l=$("bl"),n=0;function st(){if(n>=24){l.textContent="Готово";c.style.transform="scale(1)";clearInterval(tm);S.breaths++;save();render();return}var i=n%2===0;l.textContent=i?"Вдох":"Выдох";c.style.transform=i?"scale(1.35)":"scale(1)";n++}st();tm=setInterval(st,5000)}
@@ -156,6 +157,11 @@ function slip(b){S.since=Date.now();save();$("sl").classList.remove("on");render
 function hideHint(){S.hint=1;save();renderHome()}
 function renderHome(){$("hint").style.display=S.hint?"none":"block";var d=days();$("dn").textContent=d;$("dw").textContent=dwd(d);$("dp").textContent="("+words(d)+")";
 $("mood").innerHTML=[1,2,3,4,5].map(function(i){var on=S.moods.length&&S.moods[S.moods.length-1].v===i&&new Date(S.moods[S.moods.length-1].t).toDateString()===new Date().toDateString();return '<button class="btn o" style="min-height:48px;margin:0;box-shadow:none;'+(on?'border-color:var(--red);color:var(--red)':'')+'" onclick="mood('+i+')">'+i+'</button>'}).join("");
+var m=null,td=new Date().toDateString();S.moods.forEach(function(x){if(new Date(x.t).toDateString()===td)m=x.v});
+var msg={1:"Тяжко. После такого это нормально. Подыши пару минут, потом реши, что делать дальше.",2:"Непросто. Не копи это в себе: пройдись или позвони другу.",3:"Ровно. Держи темп, сегодня не нужно героизма.",4:"Хорошо идёшь. Запомни это состояние, оно пригодится в трудный час.",5:"Отлично, бро. Зафиксируй, что помогло сегодня."};
+$("moodnote").innerHTML=m?esc(msg[m])+(m<=2?'<br><button class="btn" style="min-height:48px;font-size:16px;margin-top:8px" onclick="calm()">Подышать 2 минуты</button>':""):"1 — тяжко, 5 — нормально";
+var hs="";for(var i=6;i>=0;i--){var d0=new Date();d0.setDate(d0.getDate()-i);var k=d0.toDateString(),vs=S.moods.filter(function(x){return new Date(x.t).toDateString()===k}).map(function(x){return x.v}),a=vs.length?vs[vs.length-1]:0;hs+='<div style="flex:1;text-align:center"><div style="height:44px;display:flex;align-items:flex-end"><i style="display:block;width:100%;height:'+(a?a*20:4)+'%;background:'+(a?(a<=2?"var(--red)":"var(--fg)"):"var(--ln)")+'"></i></div><div class="mu" style="font-size:10px">'+DN[(d0.getDay()+6)%7]+'</div></div>'}
+$("moodhist").innerHTML='<div style="display:flex;gap:4px;margin-top:10px">'+hs+'</div><div class="mu" style="font-size:11px;margin-top:4px">Настроение за 7 дней</div>';
 $("task").textContent=tips[Math.floor(Date.now()/864e5)%tips.length];
 var np=nextPeak();$("next").textContent=np?((np.today?"Сегодня":"Завтра")+" в "+np.h+":00. Напомним, пока вкладка открыта."):(S.urges.length<5?"Отметь тягу хотя бы 5 раз, и приложение найдёт твои опасные часы.":"Пока явных пиков нет.");
 var p=peaks(),h=new Date().getHours();$("alert").innerHTML=p.indexOf(h)>-1?'<div class="warn"><b>Сейчас твоё опасное время.</b> '+esc(tips[h%tips.length])+'</div>':""}
