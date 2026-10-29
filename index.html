@@ -9,9 +9,8 @@
 <title>Heatbreak</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@600;800&display=swap">
 <style>
-:root{--bg:#f5f2ec;--pn:#fff;--ln:#c9c3b8;--fg:#0b0b0b;--mu:#5c5852;--red:#d92b1f;--rt:#fff;--h0:#e8e3da;--h1:#f1b3ac;--h2:#e5675d;--h3:#d92b1f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0b0b;--pn:#161616;--ln:#3a3a3a;--fg:#f5f5f5;--mu:#a3a3a3;--red:#ff3b2f;--rt:#0b0b0b;--h0:#1f1f1f;--h1:#5a1511;--h2:#a3221a;--h3:#ff3b2f}}
-:root[data-theme="dark"]{--bg:#0b0b0b;--pn:#161616;--ln:#3a3a3a;--fg:#f5f5f5;--mu:#a3a3a3;--red:#ff3b2f;--rt:#0b0b0b;--h0:#1f1f1f;--h1:#5a1511;--h2:#a3221a;--h3:#ff3b2f}
+:root{--bg:#0b0b0b;--pn:#161616;--ln:#3a3a3a;--fg:#f5f5f5;--mu:#a3a3a3;--red:#ff3b2f;--rt:#0b0b0b;--h0:#1f1f1f;--h1:#5a1511;--h2:#a3221a;--h3:#ff3b2f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="light"]{--bg:#f5f2ec;--pn:#fff;--ln:#c9c3b8;--fg:#0b0b0b;--mu:#5c5852;--red:#d92b1f;--rt:#fff;--h0:#e8e3da;--h1:#f1b3ac;--h2:#e5675d;--h3:#d92b1f}
 *{box-sizing:border-box}html,body{margin:0}
 body{background:var(--bg);color:var(--fg);font:600 16px/1.45 Inter,-apple-system,sans-serif}
 #app{max-width:560px;margin:0 auto;padding:14px 16px 100px}
@@ -23,6 +22,7 @@ body{background:var(--bg);color:var(--fg);font:600 16px/1.45 Inter,-apple-system
 .top{display:flex;justify-content:space-between;align-items:center}
 .av{width:48px;height:48px;border:2px solid var(--fg);background:var(--pn);padding:0;cursor:pointer;overflow:hidden}.av img,.av svg{width:100%;height:100%;display:block;object-fit:cover}
 input,textarea,select{width:100%;font:600 16px Inter,sans-serif;padding:12px;border:2px solid var(--fg);border-radius:0;background:var(--pn);color:var(--fg);margin:4px 0}
+input[type=date]{-webkit-appearance:none;appearance:none;min-width:0;min-height:50px;display:block;text-align:left}
 .v{display:none}.v.on{display:block}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--bg);border-top:2px solid var(--fg);padding-bottom:env(safe-area-inset-bottom,0px);max-width:560px;margin:0 auto}
 nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:700 12px Inter,sans-serif;text-transform:uppercase;cursor:pointer}nav button.on{color:var(--red);box-shadow:inset 0 3px 0 var(--red)}
@@ -33,7 +33,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 .x{background:none;border:0;color:var(--mu);font-size:20px;cursor:pointer;min-width:44px;min-height:44px}
 .warn{border:2px solid var(--red);padding:12px;margin:12px 0}
 .ov{position:fixed;inset:0;background:var(--bg);z-index:9;overflow:auto;padding:calc(20px + env(safe-area-inset-top,0px)) 20px 30px;display:none}.ov.on{display:block}
-.circ{width:150px;height:150px;background:var(--red);color:var(--rt);margin:20px auto;display:flex;align-items:center;justify-content:center;font:700 22px Oswald,sans-serif;text-transform:uppercase;transition:transform 4s ease-in-out}
+.circ{width:150px;height:150px;background:var(--red);color:var(--rt);margin:0;display:flex;align-items:center;justify-content:center;font:700 22px Oswald,sans-serif;text-transform:uppercase;transition:transform 4s ease-in-out}
 .ag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.at{border:2px solid var(--ln);background:var(--pn);padding:10px 4px;text-align:center}.at.on{border-color:var(--red)}.at svg{width:56px;height:56px}
 .at b{display:block;font:700 15px Oswald,sans-serif;text-transform:uppercase}.at span{font-size:11px;color:var(--mu);line-height:1.2;display:block}
 </style>
@@ -43,10 +43,12 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 <div class="top"><div><h1 class="hf" style="font-size:34px" id="ttl">Heatbreak</h1><div class="bar" style="margin-bottom:0"></div></div><button class="av" aria-label="Профиль" onclick="go('prof')" id="avb"></button></div>
 
 <section class="v on" id="v-home">
+<div class="card" id="hint" style="border-color:var(--red)"><div class="hf" style="font-size:18px">Как это работает</div><div class="mu" style="margin:6px 0 10px">1. Тянет написать ей или проверить онлайн? Жми красную кнопку, я помогу переждать.<br>2. Вкладка «Карта» покажет, в какие часы тебя накрывает.<br>3. В «Циклах» и «Причинах» записывай, как всё было, чтобы не забыть.</div><button class="btn o" style="min-height:44px;font-size:16px;margin:0" onclick="hideHint()">Понятно</button></div>
 <div class="card f"><div class="mu">Дней без проверки её онлайна</div>
 <div style="display:flex;justify-content:space-between;align-items:flex-end"><div class="hf" style="font-size:96px;color:var(--red);line-height:.9" id="dn">0</div><div style="text-align:right"><div class="hf" style="font-size:34px" id="dw">дней</div><div class="mu" id="dp"></div></div></div></div>
 <div id="alert"></div>
 <button class="btn" onclick="urge()">Тянет написать или проверить</button>
+<div class="mu" style="margin:-2px 0 8px">Нажми, когда хочется ей написать или заглянуть в онлайн. Запишу время и помогу переждать.</div>
 <div class="card"><div class="hf" style="font-size:18px">Как ты сейчас?</div>
 <div class="row" id="mood" style="margin:8px 0"></div><div class="mu" id="moodnote">1 — тяжко, 5 — нормально</div></div>
 <div class="card"><div class="hf" style="font-size:18px">Задание дня</div><div class="mu" id="task"></div></div>
@@ -57,14 +59,14 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 <section class="v" id="v-map">
 <h2 class="hf" style="font-size:30px;margin-top:14px">Карта</h2><div class="bar"></div>
 <div class="card"><div class="hf" style="font-size:18px">Тепловая карта</div><div class="mu" id="mapinfo"></div><div id="hm" style="margin-top:10px"></div>
-<div class="mu" style="display:flex;justify-content:space-between;font-size:11px;margin-top:6px"><span>■ Спокойно</span><span style="color:var(--red)">■ Опасно</span></div></div>
+<div class="mu" style="display:flex;justify-content:space-between;font-size:11px;margin-top:6px"><span>■ Спокойно</span><span style="color:var(--red)">■ Опасно</span></div><div class="mu" id="cellinfo" style="margin-top:8px;color:var(--fg)">Нажми на клетку, чтобы увидеть детали.</div></div>
 <div class="card"><div class="hf" style="font-size:18px">Опасные часы</div><div id="peaks"></div></div>
 </section>
 
 <section class="v" id="v-cyc">
 <h2 class="hf" style="font-size:30px;margin-top:14px">Циклы</h2><div class="bar"></div>
-<div class="card"><div class="mu">Начало отношений (или возвращения)</div><input type="date" id="c1">
-<div class="mu">Расставание (пусто, если вместе)</div><input type="date" id="c2">
+<div class="card"><div class="mu">Начало отношений или возвращения (нажми, чтобы выбрать дату)</div><input type="date" id="c1">
+<div class="mu">Расставание (нажми, чтобы выбрать; пусто, если вместе)</div><input type="date" id="c2">
 <div class="mu">Кто инициировал</div><select id="c3"><option>Я</option><option>Она</option><option>Обоюдно</option></select>
 <textarea id="c4" rows="2" placeholder="Из-за чего всё случилось"></textarea>
 <button class="btn" onclick="addCyc()">Добавить цикл</button></div>
@@ -89,6 +91,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 <div class="card"><div class="hf" style="font-size:18px;margin-bottom:8px">Достижения · <span id="ac"></span></div><div class="ag" id="ag"></div></div>
 <div class="card"><div class="it"><span>Язык</span><span class="mu">Русский (другие скоро)</span></div>
 <div class="it"><span>Уведомления</span><button class="x" style="font-size:14px;color:var(--red)" onclick="askN()">Включить</button></div>
+<div class="it"><span>Тема</span><button class="x" style="font-size:14px;color:var(--red)" onclick="theme()" id="thb">Тёмная</button></div>
 <div class="it"><span>Все данные</span><button class="x" style="font-size:14px;color:var(--red)" onclick="wipe()">Стереть</button></div></div>
 <div class="card mu">Скоро: поиск своих рядом, чат, встречи «выпить пива», верификация и подписка. Для них нужен сервер, в этой версии их нет.</div>
 </section>
@@ -102,7 +105,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 <input id="onick" maxlength="20" placeholder="Придумай ник"><button class="btn" onclick="start()">Погнали</button></div>
 
 <div class="ov" id="rs"><h1 class="hf" style="font-size:36px;margin-top:20px">Переждём 2 минуты</h1><div class="bar"></div>
-<div class="circ" id="circ"><span id="cl">Готов?</span></div><div class="mu" id="tip" style="text-align:center"></div>
+<div style="height:250px;display:flex;align-items:center;justify-content:center"><div class="circ" id="circ"><span id="bl">Готов?</span></div></div><div class="mu" id="tip" style="text-align:center"></div>
 <div class="card"><div class="hf" style="font-size:18px">Твои причины</div><div class="mu" id="rr"></div></div>
 <button class="btn o" onclick="closeRs()">Закрыть</button></div>
 
@@ -112,7 +115,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 
 <script>
 var APP="Heatbreak";
-var S={nick:"",av:"",since:0,urges:[],moods:[],cycles:[],reasons:[],breaths:0};
+var S={nick:"",av:"",since:0,urges:[],moods:[],cycles:[],reasons:[],breaths:0,theme:"dark",hint:0};
 try{var raw=localStorage.getItem("hb1");if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
 function save(){try{localStorage.setItem("hb1",JSON.stringify(S))}catch(e){}}
 function $(i){return document.getElementById(i)}
@@ -145,22 +148,24 @@ function nextPeak(){var p=peaks();if(!p.length)return null;var h=new Date().getH
 
 function urge(){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];
 $("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, добавь их на вкладке «Причины».";breathe();render()}
-var tm=null;function breathe(){clearInterval(tm);var c=$("circ"),l=$("cl"),n=0;function st(){if(n>=24){l.textContent="Готово";c.style.transform="scale(1)";clearInterval(tm);S.breaths++;save();render();return}var i=n%2===0;l.textContent=i?"Вдох":"Выдох";c.style.transform=i?"scale(1.35)":"scale(1)";n++}st();tm=setInterval(st,5000)}
+var tm=null;function breathe(){clearInterval(tm);var c=$("circ"),l=$("bl"),n=0;function st(){if(n>=24){l.textContent="Готово";c.style.transform="scale(1)";clearInterval(tm);S.breaths++;save();render();return}var i=n%2===0;l.textContent=i?"Вдох":"Выдох";c.style.transform=i?"scale(1.35)":"scale(1)";n++}st();tm=setInterval(st,5000)}
 function closeRs(){clearInterval(tm);$("rs").classList.remove("on")}
 function slipOpen(){$("sl").classList.add("on")}
 function slip(b){S.since=Date.now();save();$("sl").classList.remove("on");render();if(b){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent="Дыши. Это пройдёт.";$("rr").textContent="";breathe()}}
 
-function renderHome(){var d=days();$("dn").textContent=d;$("dw").textContent=dwd(d);$("dp").textContent="("+words(d)+")";
+function hideHint(){S.hint=1;save();renderHome()}
+function renderHome(){$("hint").style.display=S.hint?"none":"block";var d=days();$("dn").textContent=d;$("dw").textContent=dwd(d);$("dp").textContent="("+words(d)+")";
 $("mood").innerHTML=[1,2,3,4,5].map(function(i){var on=S.moods.length&&S.moods[S.moods.length-1].v===i&&new Date(S.moods[S.moods.length-1].t).toDateString()===new Date().toDateString();return '<button class="btn o" style="min-height:48px;margin:0;box-shadow:none;'+(on?'border-color:var(--red);color:var(--red)':'')+'" onclick="mood('+i+')">'+i+'</button>'}).join("");
 $("task").textContent=tips[Math.floor(Date.now()/864e5)%tips.length];
 var np=nextPeak();$("next").textContent=np?((np.today?"Сегодня":"Завтра")+" в "+np.h+":00. Напомним, пока вкладка открыта."):(S.urges.length<5?"Отметь тягу хотя бы 5 раз, и приложение найдёт твои опасные часы.":"Пока явных пиков нет.");
 var p=peaks(),h=new Date().getHours();$("alert").innerHTML=p.indexOf(h)>-1?'<div class="warn"><b>Сейчас твоё опасное время.</b> '+esc(tips[h%tips.length])+'</div>':""}
 function mood(v){S.moods.push({t:Date.now(),v:v});save();renderHome()}
 
+var GRID=null;function cell(d,h){if(!GRID)return;var n=GRID[d][h];$("cellinfo").textContent=DN[d]+", "+h+":00 — "+(n?n+" "+(n==1?"отметка":n<5?"отметки":"отметок"):"тяги не было")}
 function renderMap(){var g=[];for(var i=0;i<7;i++)g.push(new Array(24).fill(0));S.urges.forEach(function(t){var x=new Date(t);g[(x.getDay()+6)%7][x.getHours()]++});
 var mx=1;g.forEach(function(r){r.forEach(function(v){if(v>mx)mx=v})});
 var h='<div class="mu" style="display:flex;justify-content:space-between;font-size:10px;margin:0 0 4px 24px"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>';
-g.forEach(function(r,i){h+='<div class="r"><b>'+DN[i]+'</b>'+r.map(function(v){var l=!v?0:v/mx>.7?3:v/mx>.35?2:1;return '<i class="l'+l+'"></i>'}).join("")+'</div>'});$("hm").innerHTML=h;
+g.forEach(function(r,i){h+='<div class="r"><b>'+DN[i]+'</b>'+r.map(function(v,k){var l=!v?0:v/mx>.7?3:v/mx>.35?2:1;return '<i class="l'+l+'" onclick="cell('+i+','+k+')"></i>'}).join("")+'</div>'});$("hm").innerHTML=h;GRID=g;
 $("mapinfo").textContent=S.urges.length?"Отмечено: "+S.urges.length+". Чем ярче, тем чаще.":"Каждый раз, когда тянет, жми красную кнопку на главной.";
 var cl=[];g.forEach(function(r,d){r.forEach(function(v,hh){if(v)cl.push({d:d,h:hh,v:v})})});cl.sort(function(a,b){return b.v-a.v}).splice(3);
 $("peaks").innerHTML=cl.length?cl.map(function(x){return '<div class="it"><span class="hf" style="font-size:20px">'+DN[x.d]+" "+x.h+':00</span><span style="color:var(--red);font-size:14px">'+x.v+" отм.</span></div>"}).join(""):'<div class="mu">Пока пусто.</div>'}
@@ -186,7 +191,9 @@ $("nk").textContent=S.nick;$("nin").value=S.nick;$("s1").textContent=d;$("s2").t
 function askN(){try{Notification.requestPermission().then(function(p){alert(p==="granted"?"Уведомления включены":"Уведомления не разрешены")})}catch(e){alert("Браузер не поддерживает уведомления")}}
 var lastN=-1;setInterval(function(){var p=peaks(),h=new Date().getHours();if(p.indexOf(h)>-1&&lastN!==h){lastN=h;try{if(Notification.permission==="granted")new Notification(APP,{body:"Сейчас твоё опасное время. "+tips[h%tips.length]})}catch(e){}}renderHome()},60000);
 function wipe(){if(confirm("Стереть все данные на этом устройстве?")){try{localStorage.removeItem("hb1")}catch(e){}location.reload()}}
-function render(){$("ttl").textContent=APP;document.title=APP;$("avb").innerHTML=avHTML();renderHome();renderMap();renderCyc();renderRsn();renderProf();if(!S.nick)$("ob").classList.add("on")}
+function applyTheme(){document.documentElement.setAttribute("data-theme",S.theme==="light"?"light":"dark");var t=$("thb");if(t)t.textContent=S.theme==="light"?"Светлая":"Тёмная"}
+function theme(){S.theme=S.theme==="light"?"dark":"light";save();applyTheme()}
+function render(){applyTheme();$("ttl").textContent=APP;document.title=APP;$("avb").innerHTML=avHTML();renderHome();renderMap();renderCyc();renderRsn();renderProf();if(!S.nick)$("ob").classList.add("on")}
 (function(){try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");x.fillStyle="#0b0b0b";x.fillRect(0,0,180,180);var G=["011000110","111101111","111111111","111111111","011111110","001111100","000111000","000010000"],CR={"2_4":1,"3_5":1,"4_4":1,"5_5":1,"6_4":1};
 G.forEach(function(l,r){for(var k=0;k<9;k++)if(l[k]=="1"&&!CR[r+"_"+k]){x.fillStyle=r<=2?"#ff3b2f":r<=4?"#c92a20":r<=6?"#8a1c15":"#5a1511";x.fillRect(19+k*16,24+r*16,14,14)}});
 var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}})();
