@@ -43,7 +43,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 <div class="top"><div><h1 class="hf" style="font-size:34px" id="ttl">Heatbreak</h1><div class="bar" style="margin-bottom:0"></div></div><button class="av" aria-label="Профиль" onclick="go('prof')" id="avb"></button></div>
 
 <section class="v on" id="v-home">
-<div class="card" id="hint" style="border-color:var(--red)"><div class="hf" style="font-size:18px">Как это работает</div><div class="mu" style="margin:6px 0 10px">1. Тянет написать ей или проверить онлайн? Жми красную кнопку, я помогу переждать.<br>2. Вкладка «Карта» покажет, в какие часы тебя накрывает.<br>3. В «Циклах» и «Причинах» записывай, как всё было, чтобы не забыть.</div><button class="btn o" style="min-height:44px;font-size:16px;margin:0" onclick="hideHint()">Понятно</button></div>
+<div class="card" id="hint" style="border-color:var(--red)"><div class="hf" style="font-size:18px">Как это работает</div><div class="mu" style="margin:6px 0 10px">1. Тянет написать ей или проверить онлайн? Жми красную кнопку, я помогу переждать.<br>2. Вкладка «Карта» покажет, в какие часы тебя накрывает.<br>3. Причины расставания запиши на главной, они пригодятся в тяжёлый момент. В «Циклах» веди историю отношений.</div><button class="btn o" style="min-height:44px;font-size:16px;margin:0" onclick="hideHint()">Понятно</button></div>
 <div class="card f"><div class="mu">Дней без проверки её онлайна</div>
 <div style="display:flex;justify-content:space-between;align-items:flex-end"><div class="hf" style="font-size:96px;color:var(--red);line-height:.9" id="dn">0</div><div style="text-align:right"><div class="hf" style="font-size:34px" id="dw">дней</div><div class="mu" id="dp"></div></div></div></div>
 <div id="alert"></div>
@@ -52,15 +52,27 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 <div class="card"><div class="hf" style="font-size:18px">Как ты сейчас?</div>
 <div class="row" id="mood" style="margin:8px 0"></div><div class="mu" id="moodnote">1 — тяжко, 5 — нормально</div><div id="moodhist"></div></div>
 <div class="card"><div class="hf" style="font-size:18px">Задание дня</div><div class="mu" id="task"></div></div>
+<div class="card"><div class="hf" style="font-size:18px">Почему мы расстались</div><div class="mu" id="hr" style="margin:6px 0 10px"></div><button class="btn o" id="hrb" style="min-height:48px;font-size:16px;margin:0" onclick="go('why')">Записать причины</button></div>
 <div class="card"><div class="hf" style="font-size:18px">Ближайший опасный час</div><div class="mu" id="next"></div></div>
 <button class="btn o" onclick="slipOpen()">Сорвался</button>
 </section>
 
 <section class="v" id="v-map">
-<h2 class="hf" style="font-size:30px;margin-top:14px">Карта</h2><div class="bar"></div>
-<div class="card"><div class="hf" style="font-size:18px">Тепловая карта</div><div class="mu" id="mapinfo"></div><div id="hm" style="margin-top:10px"></div>
-<div class="mu" style="display:flex;justify-content:space-between;font-size:11px;margin-top:6px"><span>■ Спокойно</span><span style="color:var(--red)">■ Опасно</span></div><div class="mu" id="cellinfo" style="margin-top:8px;color:var(--fg)">Нажми на клетку, чтобы увидеть детали.</div></div>
+<h2 class="hf" style="font-size:30px;margin-top:14px">Карта тяги</h2><div class="bar"></div>
+<div class="card f"><div class="hf" style="font-size:18px">Что это такое</div>
+<div class="mu" style="margin:6px 0 10px">Каждый раз, когда жмёшь красную кнопку на главной, я записываю день и час. Здесь видно, в какое время тебя накрывает чаще всего. Узнав свои опасные часы, ты готовишься заранее: гуляешь, звонишь другу, дышишь.</div><div id="mprog"></div></div>
+<div class="card"><div class="hf" style="font-size:18px">Твоя карта</div>
+<div class="mu" style="margin-bottom:8px">Строки: дни недели. Столбцы: часы суток от 0 до 23. Нажми на клетку, чтобы увидеть детали.</div>
+<div id="hm"></div>
+<div class="mu" style="font-size:11px;margin-top:8px"><span style="display:inline-block;width:10px;height:10px;background:var(--h0)"></span> нет &nbsp;<span style="display:inline-block;width:10px;height:10px;background:var(--h1)"></span> редко &nbsp;<span style="display:inline-block;width:10px;height:10px;background:var(--h2)"></span> часто &nbsp;<span style="display:inline-block;width:10px;height:10px;background:var(--h3)"></span> очень часто</div>
+<div class="mu" id="cellinfo" style="margin-top:8px;color:var(--fg)">Нажми на клетку, чтобы увидеть детали.</div></div>
+<div class="card"><div class="hf" style="font-size:18px">Вывод</div><div class="mu" id="sum"></div></div>
 <div class="card"><div class="hf" style="font-size:18px">Опасные часы</div><div id="peaks"></div></div>
+<div class="card"><div class="hf" style="font-size:18px">Добавить прошлую отметку</div>
+<div class="mu">Помнишь, когда накрывало раньше? Отметь день и час, и карта заполнится быстрее.</div>
+<div class="row"><select id="md" aria-label="День недели"><option value="0">Пн</option><option value="1">Вт</option><option value="2">Ср</option><option value="3">Чт</option><option value="4">Пт</option><option value="5">Сб</option><option value="6">Вс</option></select><select id="mh" aria-label="Час"><option value="0">00:00</option><option value="1">01:00</option><option value="2">02:00</option><option value="3">03:00</option><option value="4">04:00</option><option value="5">05:00</option><option value="6">06:00</option><option value="7">07:00</option><option value="8">08:00</option><option value="9">09:00</option><option value="10">10:00</option><option value="11">11:00</option><option value="12">12:00</option><option value="13">13:00</option><option value="14">14:00</option><option value="15">15:00</option><option value="16">16:00</option><option value="17">17:00</option><option value="18">18:00</option><option value="19">19:00</option><option value="20">20:00</option><option value="21">21:00</option><option value="22">22:00</option><option value="23">23:00</option></select></div>
+<button class="btn o" onclick="addPast()">Добавить отметку</button></div>
+<button class="btn" onclick="urge()">Тянет прямо сейчас</button>
 </section>
 
 <section class="v" id="v-cyc">
@@ -75,11 +87,20 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 </section>
 
 <section class="v" id="v-why">
-<h2 class="hf" style="font-size:30px;margin-top:14px">Почему расстались</h2><div class="bar"></div>
-<div class="card"><div class="mu">Пиши честно. В слабый момент это перечитаешь.</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:14px"><button class="x" aria-label="Назад" onclick="go('home')" style="font-size:30px">←</button><h2 class="hf" style="font-size:30px">Почему расстались</h2></div><div class="bar"></div>
+<div class="card f"><div class="hf" style="font-size:18px">Зачем это нужно</div><div class="mu" style="margin:6px 0">В момент тяги легко помнить только хорошее. Список причин, написанный на ясную голову, возвращает реальность. Приложение покажет его, когда ты нажмёшь «Тянет» и после срыва.</div><div class="mu" style="color:var(--fg)">Чем честнее и конкретнее, тем лучше работает.</div></div>
+<div class="card"><div class="mu">Пиши по одной причине</div>
 <textarea id="r1" rows="2" placeholder="Например: опять скандал из-за ревности"></textarea>
 <button class="btn" onclick="addRsn()">Добавить</button></div>
 <div class="card" id="rl"></div>
+</section>
+<section class="v" id="v-near">
+<h2 class="hf" style="font-size:30px;margin-top:14px">Свои рядом</h2><div class="bar"></div>
+<div class="card f"><div class="mu">Скоро: подбор таких же парней рядом, чат и встречи «выпить пива». Для этого нужен сервер, в тестовой версии его нет.</div></div>
+<button class="btn o" disabled style="opacity:.5">Хочу выговориться · скоро</button>
+<button class="btn o" disabled style="opacity:.5">Выпить пива · скоро</button>
+<div class="card"><div class="hf" style="font-size:18px">Пока вручную</div><div class="mu" style="margin:6px 0">Сохрани ссылку на чат или номер друга, с кем можно поговорить, и открывай отсюда.</div>
+<input id="tg" placeholder="Ссылка или телефон" onchange="saveTg()"><div id="tgl" style="margin-top:8px"></div></div>
 </section>
 
 <section class="v" id="v-prof">
@@ -97,7 +118,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 </section>
 </div>
 
-<nav id="nav"><button class="on" data-v="home">Главная</button><button data-v="map">Карта</button><button data-v="cyc">Циклы</button><button data-v="why">Причины</button></nav>
+<nav id="nav"><button class="on" data-v="home">Главная</button><button data-v="map">Карта</button><button data-v="cyc">Циклы</button><button data-v="near">Рядом</button></nav>
 
 <div class="ov" id="ob"><div class="hf" style="font-size:56px;color:var(--red);border:3px solid var(--red);padding:14px;margin-top:30px">День 1</div>
 <h1 class="hf" style="font-size:40px;margin-top:20px">С подключением, бро</h1><div class="bar"></div>
@@ -111,11 +132,12 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 
 <div class="ov" id="sl"><h1 class="hf" style="font-size:40px;margin-top:20px">Ну бывает, бро</h1><div class="bar"></div>
 <p style="font-size:16px">Заглянул. Счётчик сбросим, а ты остаёшься. Вдох, выдох. Одна проверка не отменяет то, что ты уже прошёл.</p>
+<div class="card"><div class="hf" style="font-size:18px">Помни, почему вы расстались</div><div class="mu" id="slr"></div></div>
 <button class="btn" onclick="slip(true)">Начать заново и подышать</button><button class="btn o" onclick="slip(false)">Начать заново</button><button class="btn o" onclick="document.getElementById('sl').classList.remove('on')">Отмена</button></div>
 
 <script>
 var APP="Heatbreak";
-var S={nick:"",av:"",since:0,urges:[],moods:[],cycles:[],reasons:[],breaths:0,theme:"dark",hint:0};
+var S={nick:"",av:"",since:0,urges:[],moods:[],cycles:[],reasons:[],breaths:0,theme:"dark",hint:0,tg:""};
 try{var raw=localStorage.getItem("hb1");if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
 function save(){try{localStorage.setItem("hb1",JSON.stringify(S))}catch(e){}}
 function $(i){return document.getElementById(i)}
@@ -146,16 +168,16 @@ function hist(){var h=new Array(24).fill(0);S.urges.forEach(function(t){h[new Da
 function peaks(){if(S.urges.length<5)return[];var h=hist(),mx=Math.max.apply(null,h);if(mx<2)return[];var o=[];h.forEach(function(v,i){if(v>=Math.max(2,mx*.6))o.push(i)});return o}
 function nextPeak(){var p=peaks();if(!p.length)return null;var h=new Date().getHours();for(var i=0;i<24;i++){var x=(h+i)%24;if(p.indexOf(x)>-1)return{h:x,today:h+i<24}}return null}
 
-function calm(){$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];$("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, добавь их на вкладке «Причины».";breathe()}
+function calm(){$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];$("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, запиши их на главной в блоке «Почему мы расстались».";breathe()}
 function urge(){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];
-$("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, добавь их на вкладке «Причины».";breathe();render()}
+$("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, запиши их на главной в блоке «Почему мы расстались».";breathe();render()}
 var tm=null;function breathe(){clearInterval(tm);var c=$("circ"),l=$("bl"),n=0;function st(){if(n>=24){l.textContent="Готово";c.style.transform="scale(1)";clearInterval(tm);S.breaths++;save();render();return}var i=n%2===0;l.textContent=i?"Вдох":"Выдох";c.style.transform=i?"scale(1.35)":"scale(1)";n++}st();tm=setInterval(st,5000)}
 function closeRs(){clearInterval(tm);$("rs").classList.remove("on")}
-function slipOpen(){$("sl").classList.add("on")}
+function slipOpen(){$("slr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список пока пуст. Запиши причины на главной.";$("sl").classList.add("on")}
 function slip(b){S.since=Date.now();save();$("sl").classList.remove("on");render();if(b){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent="Дыши. Это пройдёт.";$("rr").textContent="";breathe()}}
 
 function hideHint(){S.hint=1;save();renderHome()}
-function renderHome(){$("hint").style.display=S.hint?"none":"block";var d=days();$("dn").textContent=d;$("dw").textContent=dwd(d);$("dp").textContent="("+words(d)+")";
+function renderHome(){var rs=S.reasons.slice(-3);$("hr").innerHTML=rs.length?rs.map(function(r){return "• "+esc(r.t)}).join("<br>")+'<div style="font-size:12px;margin-top:6px">Покажу это, когда будет тянуть написать.</div>':"Пока пусто. Запиши, почему вы расстались: я покажу это в момент, когда будет тянуть написать.";$("hrb").textContent=S.reasons.length?"Редактировать список":"Записать причины";$("hint").style.display=S.hint?"none":"block";var d=days();$("dn").textContent=d;$("dw").textContent=dwd(d);$("dp").textContent="("+words(d)+")";
 $("mood").innerHTML=[1,2,3,4,5].map(function(i){var on=S.moods.length&&S.moods[S.moods.length-1].v===i&&new Date(S.moods[S.moods.length-1].t).toDateString()===new Date().toDateString();return '<button class="btn o" style="min-height:48px;margin:0;box-shadow:none;'+(on?'border-color:var(--red);color:var(--red)':'')+'" onclick="mood('+i+')">'+i+'</button>'}).join("");
 var m=null,td=new Date().toDateString();S.moods.forEach(function(x){if(new Date(x.t).toDateString()===td)m=x.v});
 var msg={1:"Тяжко. После такого это нормально. Подыши пару минут, потом реши, что делать дальше.",2:"Непросто. Не копи это в себе: пройдись или позвони другу.",3:"Ровно. Держи темп, сегодня не нужно героизма.",4:"Хорошо идёшь. Запомни это состояние, оно пригодится в трудный час.",5:"Отлично, бро. Зафиксируй, что помогло сегодня."};
@@ -172,9 +194,14 @@ function renderMap(){var g=[];for(var i=0;i<7;i++)g.push(new Array(24).fill(0));
 var mx=1;g.forEach(function(r){r.forEach(function(v){if(v>mx)mx=v})});
 var h='<div class="mu" style="display:flex;justify-content:space-between;font-size:10px;margin:0 0 4px 24px"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>';
 g.forEach(function(r,i){h+='<div class="r"><b>'+DN[i]+'</b>'+r.map(function(v,k){var l=!v?0:v/mx>.7?3:v/mx>.35?2:1;return '<i class="l'+l+'" onclick="cell('+i+','+k+')"></i>'}).join("")+'</div>'});$("hm").innerHTML=h;GRID=g;
-$("mapinfo").textContent=S.urges.length?"Отмечено: "+S.urges.length+". Чем ярче, тем чаще.":"Каждый раз, когда тянет, жми красную кнопку на главной.";
+var n=S.urges.length;
+$("mprog").innerHTML=n<5?'<div style="color:var(--fg);font-size:14px">Отмечено: '+n+' из 5. После 5 отметок найду твои опасные часы.</div><div style="height:12px;border:2px solid var(--ln);margin-top:6px"><div style="height:100%;width:'+(n*20)+'%;background:var(--red)"></div></div>':'<div style="color:var(--fg);font-size:14px">Отметок: '+n+'. Закономерность уже видна на карте.</div>';
+var pt=[0,0,0,0],wd=new Array(7).fill(0);g.forEach(function(r,d){r.forEach(function(v,hh){pt[Math.floor(hh/6)]+=v;wd[d]+=v})});
+var PN=["ночью (0–5)","утром (6–11)","днём (12–17)","вечером (18–23)"],WN=["по понедельникам","по вторникам","по средам","по четвергам","по пятницам","по субботам","по воскресеньям"];
+if(n<5){$("sum").textContent="Пока мало данных. Жми красную кнопку, когда тянет, или добавь прошлые отметки ниже."}else{var bp=pt.indexOf(Math.max.apply(null,pt)),bw=wd.indexOf(Math.max.apply(null,wd));$("sum").textContent="Чаще всего тебя накрывает "+PN[bp]+" и "+WN[bw]+". В эти часы приложение напомнит о себе, пока вкладка открыта."}
 var cl=[];g.forEach(function(r,d){r.forEach(function(v,hh){if(v)cl.push({d:d,h:hh,v:v})})});cl.sort(function(a,b){return b.v-a.v}).splice(3);
-$("peaks").innerHTML=cl.length?cl.map(function(x){return '<div class="it"><span class="hf" style="font-size:20px">'+DN[x.d]+" "+x.h+':00</span><span style="color:var(--red);font-size:14px">'+x.v+" отм.</span></div>"}).join(""):'<div class="mu">Пока пусто.</div>'}
+$("peaks").innerHTML=cl.length?cl.map(function(x){return '<div class="it"><span class="hf" style="font-size:20px">'+DN[x.d]+" "+x.h+':00</span><span style="color:var(--red);font-size:14px">'+x.v+" отм.</span></div>"}).join(""):'<div class="mu">Пока пусто. Появится после первых отметок.</div>'}
+function addPast(){var d=+$("md").value,h=+$("mh").value,t=new Date();t.setHours(h,0,0,0);var df=(t.getDay()+6)%7-d;if(df<0)df+=7;if(df===0&&t.getTime()>Date.now())df=7;t.setDate(t.getDate()-df);S.urges.push(t.getTime());save();render()}
 
 function addCyc(){var a=$("c1").value;if(!a)return;S.cycles.push({a:a,b:$("c2").value,who:$("c3").value,why:$("c4").value.trim()});S.cycles.sort(function(x,y){return x.a<y.a?-1:1});save();$("c1").value=$("c2").value=$("c4").value="";render()}
 function delCyc(i){S.cycles.splice(i,1);save();render()}
@@ -199,7 +226,9 @@ var lastN=-1;setInterval(function(){var p=peaks(),h=new Date().getHours();if(p.i
 function wipe(){if(confirm("Стереть все данные на этом устройстве?")){try{localStorage.removeItem("hb1")}catch(e){}location.reload()}}
 function applyTheme(){document.documentElement.setAttribute("data-theme",S.theme==="light"?"light":"dark");var t=$("thb");if(t)t.textContent=S.theme==="light"?"Светлая":"Тёмная"}
 function theme(){S.theme=S.theme==="light"?"dark":"light";save();applyTheme()}
-function render(){applyTheme();$("ttl").textContent=APP;document.title=APP;$("avb").innerHTML=avHTML();renderHome();renderMap();renderCyc();renderRsn();renderProf();if(!S.nick)$("ob").classList.add("on")}
+function saveTg(){S.tg=$("tg").value.trim();save();renderNear()}
+function renderNear(){$("tg").value=S.tg;var u=S.tg;$("tgl").innerHTML=!u?"":/^https?:\/\//.test(u)?'<a href="'+esc(u)+'" target="_blank" rel="noopener" style="color:var(--red)">Открыть: '+esc(u)+'</a>':/^[+\d][\d\s()-]{5,}$/.test(u)?'<a href="tel:'+esc(u.replace(/[^+\d]/g,""))+'" style="color:var(--red)">Позвонить: '+esc(u)+'</a>':esc(u)}
+function render(){applyTheme();renderNear();$("ttl").textContent=APP;document.title=APP;$("avb").innerHTML=avHTML();renderHome();renderMap();renderCyc();renderRsn();renderProf();if(!S.nick)$("ob").classList.add("on")}
 (function(){try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");x.fillStyle="#0b0b0b";x.fillRect(0,0,180,180);var G=["011000110","111101111","111111111","111111111","011111110","001111100","000111000","000010000"],CR={"2_4":1,"3_5":1,"4_4":1,"5_5":1,"6_4":1};
 G.forEach(function(l,r){for(var k=0;k<9;k++)if(l[k]=="1"&&!CR[r+"_"+k]){x.fillStyle=r<=2?"#ff3b2f":r<=4?"#c92a20":r<=6?"#8a1c15":"#5a1511";x.fillRect(19+k*16,24+r*16,14,14)}});
 var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}})();
