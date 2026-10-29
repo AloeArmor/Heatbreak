@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0b0b">
+<title>Heatbreak</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@600;800&display=swap">
+<style>
+:root{--bg:#f5f2ec;--pn:#fff;--ln:#c9c3b8;--fg:#0b0b0b;--mu:#5c5852;--red:#d92b1f;--rt:#fff;--h0:#e8e3da;--h1:#f1b3ac;--h2:#e5675d;--h3:#d92b1f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0b0b;--pn:#161616;--ln:#3a3a3a;--fg:#f5f5f5;--mu:#a3a3a3;--red:#ff3b2f;--rt:#0b0b0b;--h0:#1f1f1f;--h1:#5a1511;--h2:#a3221a;--h3:#ff3b2f}}
+:root[data-theme="dark"]{--bg:#0b0b0b;--pn:#161616;--ln:#3a3a3a;--fg:#f5f5f5;--mu:#a3a3a3;--red:#ff3b2f;--rt:#0b0b0b;--h0:#1f1f1f;--h1:#5a1511;--h2:#a3221a;--h3:#ff3b2f}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:600 16px/1.45 Inter,-apple-system,sans-serif}
+#app{max-width:560px;margin:0 auto;padding:14px 16px 100px}
+.hf{font-family:Oswald,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.02em;margin:0;line-height:1.05}
+.mu{color:var(--mu);font-size:14px}.bar{width:56px;height:6px;background:var(--red);margin:8px 0 12px}
+.card{background:var(--pn);border:2px solid var(--ln);padding:14px;margin:12px 0}.card.f{border-color:var(--fg)}
+.btn{width:100%;min-height:56px;border:2px solid var(--fg);border-radius:0;background:var(--red);color:var(--rt);font:700 20px Oswald,sans-serif;text-transform:uppercase;letter-spacing:.03em;box-shadow:4px 4px 0 var(--fg);margin:8px 0;cursor:pointer}
+.btn.o{background:var(--pn);color:var(--fg)}
+.top{display:flex;justify-content:space-between;align-items:center}
+.av{width:48px;height:48px;border:2px solid var(--fg);background:var(--pn);padding:0;cursor:pointer;overflow:hidden}.av img,.av svg{width:100%;height:100%;display:block;object-fit:cover}
+input,textarea,select{width:100%;font:600 16px Inter,sans-serif;padding:12px;border:2px solid var(--fg);border-radius:0;background:var(--pn);color:var(--fg);margin:4px 0}
+.v{display:none}.v.on{display:block}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--bg);border-top:2px solid var(--fg);padding-bottom:env(safe-area-inset-bottom,0px);max-width:560px;margin:0 auto}
+nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:700 12px Inter,sans-serif;text-transform:uppercase;cursor:pointer}nav button.on{color:var(--red);box-shadow:inset 0 3px 0 var(--red)}
+.r{display:flex;gap:2px;margin-bottom:2px}.r b{width:22px;font-size:11px;color:var(--mu);line-height:1}.r i{flex:1;aspect-ratio:1;background:var(--h0)}
+.l1{background:var(--h1)!important}.l2{background:var(--h2)!important}.l3{background:var(--h3)!important}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.it{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:2px solid var(--ln);padding:10px 0}.it:first-child{border-top:0}
+.x{background:none;border:0;color:var(--mu);font-size:20px;cursor:pointer;min-width:44px;min-height:44px}
+.warn{border:2px solid var(--red);padding:12px;margin:12px 0}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:9;overflow:auto;padding:calc(20px + env(safe-area-inset-top,0px)) 20px 30px;display:none}.ov.on{display:block}
+.circ{width:150px;height:150px;background:var(--red);color:var(--rt);margin:20px auto;display:flex;align-items:center;justify-content:center;font:700 22px Oswald,sans-serif;text-transform:uppercase;transition:transform 4s ease-in-out}
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.at{border:2px solid var(--ln);background:var(--pn);padding:10px 4px;text-align:center}.at.on{border-color:var(--red)}.at svg{width:56px;height:56px}
+.at b{display:block;font:700 15px Oswald,sans-serif;text-transform:uppercase}.at span{font-size:11px;color:var(--mu);line-height:1.2;display:block}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="top"><div><h1 class="hf" style="font-size:34px" id="ttl">Heatbreak</h1><div class="bar" style="margin-bottom:0"></div></div><button class="av" aria-label="Профиль" onclick="go('prof')" id="avb"></button></div>
+
+<section class="v on" id="v-home">
+<div class="card f"><div class="mu">Дней без проверки её онлайна</div>
+<div style="display:flex;justify-content:space-between;align-items:flex-end"><div class="hf" style="font-size:96px;color:var(--red);line-height:.9" id="dn">0</div><div style="text-align:right"><div class="hf" style="font-size:34px" id="dw">дней</div><div class="mu" id="dp"></div></div></div></div>
+<div id="alert"></div>
+<button class="btn" onclick="urge()">Тянет написать или проверить</button>
+<div class="card"><div class="hf" style="font-size:18px">Как ты сейчас?</div>
+<div class="row" id="mood" style="margin:8px 0"></div><div class="mu" id="moodnote">1 — тяжко, 5 — нормально</div></div>
+<div class="card"><div class="hf" style="font-size:18px">Задание дня</div><div class="mu" id="task"></div></div>
+<div class="card"><div class="hf" style="font-size:18px">Ближайший опасный час</div><div class="mu" id="next"></div></div>
+<button class="btn o" onclick="slipOpen()">Сорвался</button>
+</section>
+
+<section class="v" id="v-map">
+<h2 class="hf" style="font-size:30px;margin-top:14px">Карта</h2><div class="bar"></div>
+<div class="card"><div class="hf" style="font-size:18px">Тепловая карта</div><div class="mu" id="mapinfo"></div><div id="hm" style="margin-top:10px"></div>
+<div class="mu" style="display:flex;justify-content:space-between;font-size:11px;margin-top:6px"><span>■ Спокойно</span><span style="color:var(--red)">■ Опасно</span></div></div>
+<div class="card"><div class="hf" style="font-size:18px">Опасные часы</div><div id="peaks"></div></div>
+</section>
+
+<section class="v" id="v-cyc">
+<h2 class="hf" style="font-size:30px;margin-top:14px">Циклы</h2><div class="bar"></div>
+<div class="card"><div class="mu">Начало отношений (или возвращения)</div><input type="date" id="c1">
+<div class="mu">Расставание (пусто, если вместе)</div><input type="date" id="c2">
+<div class="mu">Кто инициировал</div><select id="c3"><option>Я</option><option>Она</option><option>Обоюдно</option></select>
+<textarea id="c4" rows="2" placeholder="Из-за чего всё случилось"></textarea>
+<button class="btn" onclick="addCyc()">Добавить цикл</button></div>
+<div class="card f"><div class="hf" style="font-size:18px">Что видно по циклам</div><div class="mu" id="pat"></div></div>
+<div class="card" id="cl"></div>
+</section>
+
+<section class="v" id="v-why">
+<h2 class="hf" style="font-size:30px;margin-top:14px">Почему расстались</h2><div class="bar"></div>
+<div class="card"><div class="mu">Пиши честно. В слабый момент это перечитаешь.</div>
+<textarea id="r1" rows="2" placeholder="Например: опять скандал из-за ревности"></textarea>
+<button class="btn" onclick="addRsn()">Добавить</button></div>
+<div class="card" id="rl"></div>
+</section>
+
+<section class="v" id="v-prof">
+<div style="display:flex;align-items:center;gap:12px;margin-top:14px"><button class="x" aria-label="Назад" onclick="go('home')" style="font-size:30px">←</button><h2 class="hf" style="font-size:30px">Профиль</h2></div><div class="bar"></div>
+<div style="display:flex;gap:14px;align-items:center"><div class="av" style="width:96px;height:96px" id="avbig"></div>
+<div style="flex:1"><div class="hf" style="font-size:28px" id="nk"></div><label class="btn o" style="display:block;text-align:center;line-height:52px;min-height:56px;font-size:16px;cursor:pointer;margin:8px 0 0">Загрузить фото<input type="file" accept="image/*" style="display:none" onchange="upAv(this)"></label></div></div>
+<div class="card"><div class="mu">Ник</div><input id="nin" maxlength="20" onchange="setNick(this.value)"></div>
+<div class="row"><div class="card f"><div class="mu">Дней</div><div class="hf" style="font-size:36px;color:var(--red)" id="s1"></div></div><div class="card f"><div class="mu">Отметок тяги</div><div class="hf" style="font-size:36px;color:var(--red)" id="s2"></div></div></div>
+<div class="card"><div class="hf" style="font-size:18px;margin-bottom:8px">Достижения · <span id="ac"></span></div><div class="ag" id="ag"></div></div>
+<div class="card"><div class="it"><span>Язык</span><span class="mu">Русский (другие скоро)</span></div>
+<div class="it"><span>Уведомления</span><button class="x" style="font-size:14px;color:var(--red)" onclick="askN()">Включить</button></div>
+<div class="it"><span>Все данные</span><button class="x" style="font-size:14px;color:var(--red)" onclick="wipe()">Стереть</button></div></div>
+<div class="card mu">Скоро: поиск своих рядом, чат, встречи «выпить пива», верификация и подписка. Для них нужен сервер, в этой версии их нет.</div>
+</section>
+</div>
+
+<nav id="nav"><button class="on" data-v="home">Главная</button><button data-v="map">Карта</button><button data-v="cyc">Циклы</button><button data-v="why">Причины</button></nav>
+
+<div class="ov" id="ob"><div class="hf" style="font-size:56px;color:var(--red);border:3px solid var(--red);padding:14px;margin-top:30px">День 1</div>
+<h1 class="hf" style="font-size:40px;margin-top:20px">С подключением, бро</h1><div class="bar"></div>
+<p class="mu" style="font-size:16px">Клуб не самый весёлый, зато вход бесплатный. Всё хранится только на твоём телефоне.</p>
+<input id="onick" maxlength="20" placeholder="Придумай ник"><button class="btn" onclick="start()">Погнали</button></div>
+
+<div class="ov" id="rs"><h1 class="hf" style="font-size:36px;margin-top:20px">Переждём 2 минуты</h1><div class="bar"></div>
+<div class="circ" id="circ"><span id="cl">Готов?</span></div><div class="mu" id="tip" style="text-align:center"></div>
+<div class="card"><div class="hf" style="font-size:18px">Твои причины</div><div class="mu" id="rr"></div></div>
+<button class="btn o" onclick="closeRs()">Закрыть</button></div>
+
+<div class="ov" id="sl"><h1 class="hf" style="font-size:40px;margin-top:20px">Ну бывает, бро</h1><div class="bar"></div>
+<p style="font-size:16px">Заглянул. Счётчик сбросим, а ты остаёшься. Вдох, выдох. Одна проверка не отменяет то, что ты уже прошёл.</p>
+<button class="btn" onclick="slip(true)">Начать заново и подышать</button><button class="btn o" onclick="slip(false)">Начать заново</button><button class="btn o" onclick="document.getElementById('sl').classList.remove('on')">Отмена</button></div>
+
+<script>
+var APP="Heatbreak";
+var S={nick:"",av:"",since:0,urges:[],moods:[],cycles:[],reasons:[],breaths:0};
+try{var raw=localStorage.getItem("hb1");if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
+function save(){try{localStorage.setItem("hb1",JSON.stringify(S))}catch(e){}}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var U=["ноль","один","два","три","четыре","пять","шесть","семь","восемь","девять","десять","одиннадцать","двенадцать","тринадцать","четырнадцать","пятнадцать","шестнадцать","семнадцать","восемнадцать","девятнадцать"],T=["","","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
+function words(n){return n<20?U[n]:n<100?T[Math.floor(n/10)]+(n%10?" "+U[n%10]:""):String(n)}
+function dwd(n){var a=n%100,b=n%10;return a>10&&a<20?"дней":b==1?"день":b>1&&b<5?"дня":"дней"}
+function days(){return S.since?Math.floor((Date.now()-S.since)/864e5):0}
+var tips=["Выйди на 20 минут пройтись, телефон оставь дома.","Сделай 20 приседаний или отжиманий.","Позвони другу или брату, не обязательно про неё.","Убери телефон в другую комнату на час.","Займись машиной или записью в сервис: маленькое дело с результатом.","Выпиши все мысли на бумагу на 10 минут и закрой тетрадь.","Поработай над своим проектом хотя бы 15 минут."];
+var DN=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+
+function go(v){document.querySelectorAll(".v").forEach(function(s){s.classList.remove("on")});$("v-"+v).classList.add("on");
+document.querySelectorAll("#nav button").forEach(function(b){b.classList.toggle("on",b.dataset.v===v)});render();window.scrollTo(0,0)}
+document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){go(b.dataset.v)}});
+
+function defAv(sz){var G=["011100","111110","111110","111110","011100","001000"];
+var S2=["000111000","001111100","001111100","001111100","000111000","000010000","011111110","111111111","111111111"];
+var cells=[];S2.forEach(function(l,r){for(var c=0;c<9;c++)if(l[c]=="1")cells.push([r,c])});
+cells.sort(function(a,b){return b[0]-a[0]||a[1]-b[1]});var d=days(),f=d<7?.25:d<30?.5:d<90?.75:1,n=Math.round(cells.length*f),lit={};
+cells.slice(0,n).forEach(function(x){lit[x[0]+"_"+x[1]]=1});
+return '<svg viewBox="0 0 100 100" role="img" aria-label="Стандартный аватар"><rect width="100" height="100" fill="#0b0b0b"/>'+cells.map(function(x){return '<rect x="'+(9+x[1]*9)+'" y="'+(9+x[0]*9)+'" width="8" height="8" fill="'+(lit[x[0]+"_"+x[1]]?"#ff3b2f":"#2b2b2b")+'"/>'}).join("")+'</svg>'}
+function avHTML(){return S.av?'<img alt="Аватар" src="'+S.av+'">':defAv()}
+function upAv(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=c.height=160;var s=Math.min(im.width,im.height),x=(im.width-s)/2,y=(im.height-s)/2;c.getContext("2d").drawImage(im,x,y,s,s,0,0,160,160);S.av=c.toDataURL("image/jpeg",.8);save();render()};im.src=r.result};r.readAsDataURL(f)}
+function setNick(v){S.nick=v.trim()||S.nick;save();render()}
+function start(){var n=$("onick").value.trim();if(!n){$("onick").focus();return}S.nick=n;S.since=Date.now();save();$("ob").classList.remove("on");render()}
+
+function hist(){var h=new Array(24).fill(0);S.urges.forEach(function(t){h[new Date(t).getHours()]++});return h}
+function peaks(){if(S.urges.length<5)return[];var h=hist(),mx=Math.max.apply(null,h);if(mx<2)return[];var o=[];h.forEach(function(v,i){if(v>=Math.max(2,mx*.6))o.push(i)});return o}
+function nextPeak(){var p=peaks();if(!p.length)return null;var h=new Date().getHours();for(var i=0;i<24;i++){var x=(h+i)%24;if(p.indexOf(x)>-1)return{h:x,today:h+i<24}}return null}
+
+function urge(){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];
+$("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, добавь их на вкладке «Причины».";breathe();render()}
+var tm=null;function breathe(){clearInterval(tm);var c=$("circ"),l=$("cl"),n=0;function st(){if(n>=24){l.textContent="Готово";c.style.transform="scale(1)";clearInterval(tm);S.breaths++;save();render();return}var i=n%2===0;l.textContent=i?"Вдох":"Выдох";c.style.transform=i?"scale(1.35)":"scale(1)";n++}st();tm=setInterval(st,5000)}
+function closeRs(){clearInterval(tm);$("rs").classList.remove("on")}
+function slipOpen(){$("sl").classList.add("on")}
+function slip(b){S.since=Date.now();save();$("sl").classList.remove("on");render();if(b){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent="Дыши. Это пройдёт.";$("rr").textContent="";breathe()}}
+
+function renderHome(){var d=days();$("dn").textContent=d;$("dw").textContent=dwd(d);$("dp").textContent="("+words(d)+")";
+$("mood").innerHTML=[1,2,3,4,5].map(function(i){var on=S.moods.length&&S.moods[S.moods.length-1].v===i&&new Date(S.moods[S.moods.length-1].t).toDateString()===new Date().toDateString();return '<button class="btn o" style="min-height:48px;margin:0;box-shadow:none;'+(on?'border-color:var(--red);color:var(--red)':'')+'" onclick="mood('+i+')">'+i+'</button>'}).join("");
+$("task").textContent=tips[Math.floor(Date.now()/864e5)%tips.length];
+var np=nextPeak();$("next").textContent=np?((np.today?"Сегодня":"Завтра")+" в "+np.h+":00. Напомним, пока вкладка открыта."):(S.urges.length<5?"Отметь тягу хотя бы 5 раз, и приложение найдёт твои опасные часы.":"Пока явных пиков нет.");
+var p=peaks(),h=new Date().getHours();$("alert").innerHTML=p.indexOf(h)>-1?'<div class="warn"><b>Сейчас твоё опасное время.</b> '+esc(tips[h%tips.length])+'</div>':""}
+function mood(v){S.moods.push({t:Date.now(),v:v});save();renderHome()}
+
+function renderMap(){var g=[];for(var i=0;i<7;i++)g.push(new Array(24).fill(0));S.urges.forEach(function(t){var x=new Date(t);g[(x.getDay()+6)%7][x.getHours()]++});
+var mx=1;g.forEach(function(r){r.forEach(function(v){if(v>mx)mx=v})});
+var h='<div class="mu" style="display:flex;justify-content:space-between;font-size:10px;margin:0 0 4px 24px"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>';
+g.forEach(function(r,i){h+='<div class="r"><b>'+DN[i]+'</b>'+r.map(function(v){var l=!v?0:v/mx>.7?3:v/mx>.35?2:1;return '<i class="l'+l+'"></i>'}).join("")+'</div>'});$("hm").innerHTML=h;
+$("mapinfo").textContent=S.urges.length?"Отмечено: "+S.urges.length+". Чем ярче, тем чаще.":"Каждый раз, когда тянет, жми красную кнопку на главной.";
+var cl=[];g.forEach(function(r,d){r.forEach(function(v,hh){if(v)cl.push({d:d,h:hh,v:v})})});cl.sort(function(a,b){return b.v-a.v}).splice(3);
+$("peaks").innerHTML=cl.length?cl.map(function(x){return '<div class="it"><span class="hf" style="font-size:20px">'+DN[x.d]+" "+x.h+':00</span><span style="color:var(--red);font-size:14px">'+x.v+" отм.</span></div>"}).join(""):'<div class="mu">Пока пусто.</div>'}
+
+function addCyc(){var a=$("c1").value;if(!a)return;S.cycles.push({a:a,b:$("c2").value,who:$("c3").value,why:$("c4").value.trim()});S.cycles.sort(function(x,y){return x.a<y.a?-1:1});save();$("c1").value=$("c2").value=$("c4").value="";render()}
+function delCyc(i){S.cycles.splice(i,1);save();render()}
+function fd(d){return d?new Date(d).toLocaleDateString("ru-RU"):"…"}
+function renderCyc(){var c=S.cycles,len=[],gp=[];c.forEach(function(x,i){if(x.b)len.push((new Date(x.b)-new Date(x.a))/864e5);if(x.b&&c[i+1])gp.push((new Date(c[i+1].a)-new Date(x.b))/864e5)});
+var av=function(a){return a.length?Math.round(a.reduce(function(s,v){return s+v},0)/a.length):null},t=["Циклов: "+c.length+"."];
+if(av(len)!==null)t.push("В среднем вместе: "+av(len)+" дн.");if(av(gp)!==null)t.push("Возвращаетесь через: "+av(gp)+" дн.");
+if(c.length<2)t.push("Добавь хотя бы два цикла, и появится закономерность.");$("pat").textContent=t.join(" ");
+$("cl").innerHTML=c.length?c.map(function(x,i){return '<div class="it"><div><b>'+fd(x.a)+" — "+(x.b?fd(x.b):"вместе")+'</b><div class="mu">'+esc(x.who)+(x.why?": "+esc(x.why):"")+'</div></div><button class="x" aria-label="Удалить" onclick="delCyc('+i+')">✕</button></div>'}).reverse().join(""):'<div class="mu">Пока пусто.</div>'}
+function addRsn(){var t=$("r1").value.trim();if(!t)return;S.reasons.push({t:t});save();$("r1").value="";render()}
+function delRsn(i){S.reasons.splice(i,1);save();render()}
+function renderRsn(){$("rl").innerHTML=S.reasons.length?S.reasons.map(function(r,i){return '<div class="it"><div>'+esc(r.t)+'</div><button class="x" aria-label="Удалить" onclick="delRsn('+i+')">✕</button></div>'}).join(""):'<div class="mu">Пока пусто.</div>'}
+
+var P={spark:["0001000","0001000","0011100","1111111","0011100","0001000","0001000"],flame:["0001000","0011000","0011100","0111110","0111110","0111110","0011100"],shield:["1111111","1111111","1111111","1111111","0111110","0011100","0001000"],peak:["0001000","0011100","0011100","0111110","0111110","1111111","1111111"],crown:["1001001","1101011","1111111","1111111","1111111","0000000","1111111"],ring:["0011100","0100010","1000001","1000001","1000001","0100010","0011100"],bars:["0000001","0000101","0010101","0010101","1010101","1010101","1111111"],note:["1111111","1000001","1011101","1000001","1011101","1000001","1111111"],talk:["0111110","1111111","1111111","1111111","0111110","0010000","0100000"],check:["0000001","0000011","1000110","1101100","0111000","0010000","0000000"],mug:["1111100","1111100","1111111","1111101","1111111","1111100","1111100"],moon:["0011100","0111000","1110000","1110000","1110000","0111000","0011100"]};
+function ico(k,on){var s="";P[k].forEach(function(l,r){for(var c=0;c<7;c++)if(l[c]=="1")s+='<rect x="'+(5.5+c*13)+'" y="'+(5.5+r*13)+'" width="11" height="11" fill="'+(on?"var(--red)":"var(--ln)")+'"/>'});return '<svg viewBox="0 0 100 100" aria-hidden="true">'+s+'</svg>'}
+function renderProf(){var d=days(),A=[["spark","Искра","1 день",d>=1],["flame","Огонь","7 дней",d>=7],["shield","Щит","30 дней",d>=30],["peak","Вершина","90 дней",d>=90],["crown","Корона","365 дней",d>=365],["ring","Выдох","Первое дыхание",S.breaths>=1],["bars","Паттерн","3 цикла",S.cycles.length>=3],["note","Записал","5 причин",S.reasons.length>=5],["talk","Разговор","Скоро",false],["check","Свой","Скоро",false],["mug","Кружка","Скоро",false],["moon","Ночь","Скоро",false]];
+var n=0;A.forEach(function(a){if(a[3])n++});$("ac").textContent=n+" из 12";
+$("ag").innerHTML=A.map(function(a){return '<div class="at'+(a[3]?" on":"")+'">'+ico(a[0],a[3])+'<b>'+a[1]+'</b><span>'+a[2]+'</span></div>'}).join("");
+$("nk").textContent=S.nick;$("nin").value=S.nick;$("s1").textContent=d;$("s2").textContent=S.urges.length;$("avbig").innerHTML=avHTML()}
+function askN(){try{Notification.requestPermission().then(function(p){alert(p==="granted"?"Уведомления включены":"Уведомления не разрешены")})}catch(e){alert("Браузер не поддерживает уведомления")}}
+var lastN=-1;setInterval(function(){var p=peaks(),h=new Date().getHours();if(p.indexOf(h)>-1&&lastN!==h){lastN=h;try{if(Notification.permission==="granted")new Notification(APP,{body:"Сейчас твоё опасное время. "+tips[h%tips.length]})}catch(e){}}renderHome()},60000);
+function wipe(){if(confirm("Стереть все данные на этом устройстве?")){try{localStorage.removeItem("hb1")}catch(e){}location.reload()}}
+function render(){$("ttl").textContent=APP;document.title=APP;$("avb").innerHTML=avHTML();renderHome();renderMap();renderCyc();renderRsn();renderProf();if(!S.nick)$("ob").classList.add("on")}
+(function(){try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");x.fillStyle="#0b0b0b";x.fillRect(0,0,180,180);var G=["011000110","111101111","111111111","111111111","011111110","001111100","000111000","000010000"],CR={"2_4":1,"3_5":1,"4_4":1,"5_5":1,"6_4":1};
+G.forEach(function(l,r){for(var k=0;k<9;k++)if(l[k]=="1"&&!CR[r+"_"+k]){x.fillStyle=r<=2?"#ff3b2f":r<=4?"#c92a20":r<=6?"#8a1c15":"#5a1511";x.fillRect(19+k*16,24+r*16,14,14)}});
+var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}})();
+render();
+</script>
+</body>
+</html>
