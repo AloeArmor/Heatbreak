@@ -77,12 +77,17 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 
 <section class="v" id="v-cyc">
 <h2 class="hf" style="font-size:30px;margin-top:14px">Циклы</h2><div class="bar"></div>
-<div class="card"><div class="mu">Начало отношений или возвращения (нажми, чтобы выбрать дату)</div><input type="date" id="c1">
-<div class="mu">Расставание (нажми, чтобы выбрать; пусто, если вместе)</div><input type="date" id="c2">
-<div class="mu">Кто инициировал</div><select id="c3"><option>Я</option><option>Она</option><option>Обоюдно</option></select>
-<textarea id="c4" rows="2" placeholder="Из-за чего всё случилось"></textarea>
-<button class="btn" onclick="addCyc()">Добавить цикл</button></div>
-<div class="card f"><div class="hf" style="font-size:18px">Что видно по циклам</div><div class="mu" id="pat"></div></div>
+<div class="card f"><div class="hf" style="font-size:18px">Что это такое</div>
+<div class="mu" style="margin:6px 0">Цикл — один период отношений: от начала (или возвращения) до расставания. Если вы сходились и расходились несколько раз, каждый период записывается отдельно.</div>
+<div class="mu" style="color:var(--fg)">Зачем: изнутри кажется, что «в этот раз всё иначе». Когда видишь все циклы вместе, сколько они длились, из-за чего заканчивались и как быстро вы возвращались, легче понять, повторяется ли история. Это помогает решать с холодной головой.</div><div id="cprog"></div></div>
+<div class="card"><div class="hf" style="font-size:18px">Добавить цикл</div>
+<div class="mu" style="margin-top:6px">1. Когда начались отношения или возобновились (нажми, чтобы выбрать дату)</div><input type="date" id="c1">
+<div class="mu">2. Когда расстались. Если вы вместе сейчас, оставь пустым</div><input type="date" id="c2">
+<div class="mu">3. Кто был инициатором расставания</div><select id="c3"><option>Я</option><option>Она</option><option>Обоюдно</option></select>
+<div class="mu">4. Из-за чего (коротко, своими словами)</div><textarea id="c4" rows="2" placeholder="Например: ревность, ссоры из-за денег"></textarea>
+<button class="btn" onclick="addCyc()">Добавить цикл</button>
+<div class="mu" style="font-size:12px">Данные хранятся только на твоём телефоне.</div></div>
+<div class="card f"><div class="hf" style="font-size:18px">Что видно по циклам</div><div class="mu" id="pat" style="margin-top:6px"></div></div>
 <div class="card" id="cl"></div>
 </section>
 
@@ -206,11 +211,22 @@ function addPast(){var d=+$("md").value,h=+$("mh").value,t=new Date();t.setHours
 function addCyc(){var a=$("c1").value;if(!a)return;S.cycles.push({a:a,b:$("c2").value,who:$("c3").value,why:$("c4").value.trim()});S.cycles.sort(function(x,y){return x.a<y.a?-1:1});save();$("c1").value=$("c2").value=$("c4").value="";render()}
 function delCyc(i){S.cycles.splice(i,1);save();render()}
 function fd(d){return d?new Date(d).toLocaleDateString("ru-RU"):"…"}
-function renderCyc(){var c=S.cycles,len=[],gp=[];c.forEach(function(x,i){if(x.b)len.push((new Date(x.b)-new Date(x.a))/864e5);if(x.b&&c[i+1])gp.push((new Date(c[i+1].a)-new Date(x.b))/864e5)});
-var av=function(a){return a.length?Math.round(a.reduce(function(s,v){return s+v},0)/a.length):null},t=["Циклов: "+c.length+"."];
-if(av(len)!==null)t.push("В среднем вместе: "+av(len)+" дн.");if(av(gp)!==null)t.push("Возвращаетесь через: "+av(gp)+" дн.");
-if(c.length<2)t.push("Добавь хотя бы два цикла, и появится закономерность.");$("pat").textContent=t.join(" ");
-$("cl").innerHTML=c.length?c.map(function(x,i){return '<div class="it"><div><b>'+fd(x.a)+" — "+(x.b?fd(x.b):"вместе")+'</b><div class="mu">'+esc(x.who)+(x.why?": "+esc(x.why):"")+'</div></div><button class="x" aria-label="Удалить" onclick="delCyc('+i+')">✕</button></div>'}).reverse().join(""):'<div class="mu">Пока пусто.</div>'}
+function renderCyc(){var c=S.cycles,len=[],gp=[],w={"Я":0,"Она":0,"Обоюдно":0};
+c.forEach(function(x,i){w[x.who]++;if(x.b)len.push((new Date(x.b)-new Date(x.a))/864e5);if(x.b&&c[i+1])gp.push((new Date(c[i+1].a)-new Date(x.b))/864e5)});
+var av=function(a){return a.length?Math.round(a.reduce(function(s,v){return s+v},0)/a.length):null},n=c.length;
+$("cprog").innerHTML=n<2?'<div style="color:var(--fg);font-size:14px;margin-top:10px">Добавлено: '+n+' из 2. С двух циклов покажу закономерности.</div><div style="height:12px;border:2px solid var(--ln);margin-top:6px"><div style="height:100%;width:'+(n*50)+'%;background:var(--red)"></div></div>':'<div style="color:var(--fg);font-size:14px;margin-top:10px">Добавлено циклов: '+n+'. Закономерности ниже.</div>';
+var st={};c.forEach(function(x){var seen={};(x.why||"").toLowerCase().split(/[^а-яёa-z]+/).forEach(function(t){if(t.length>=5){var k=t.slice(0,5);if(!seen[k]){seen[k]=1;(st[k]=st[k]||{w:t,n:0}).n++}}})});
+var rp=Object.keys(st).filter(function(k){return st[k].n>=2}).map(function(k){return st[k].w}),L=[];
+if(!n)L.push("Пока нет данных. Добавь первый цикл выше.");
+else{L.push("Всего циклов: "+n+(n>1?", возвращений: "+(n-1):"")+".");
+if(av(len)!==null)L.push("В среднем отношения длились "+av(len)+" дн.");
+if(av(gp)!==null)L.push("После расставания возвращались в среднем через "+av(gp)+" дн.");
+var tp=["Я","Она","Обоюдно"].sort(function(a,b){return w[b]-w[a]})[0];
+if(n>1&&w[tp]>0)L.push("Чаще инициатор: "+(tp==="Обоюдно"?"решение было обоюдным":tp==="Я"?"ты":"она")+" ("+w[tp]+" из "+n+").");
+if(rp.length)L.push("Повторяющиеся причины: "+esc(rp.slice(0,4).join(", "))+".");
+if(n>1)L.push("Если причины повторяются, перечитай их, прежде чем решать, возвращаться ли.")}
+$("pat").innerHTML=L.map(function(t){return '<div style="margin-bottom:6px">'+t+'</div>'}).join("");
+$("cl").innerHTML='<div class="hf" style="font-size:18px;margin-bottom:6px">Твои циклы</div>'+(n?c.map(function(x,i){var d=x.b?Math.round((new Date(x.b)-new Date(x.a))/864e5)+" дн.":"идёт сейчас";return '<div class="it"><div><b>'+fd(x.a)+" — "+(x.b?fd(x.b):"вместе")+'</b><div class="mu">'+d+" · "+esc(x.who)+(x.why?": "+esc(x.why):"")+'</div></div><button class="x" aria-label="Удалить" onclick="delCyc('+i+')">✕</button></div>'}).reverse().join(""):'<div class="mu">Пока пусто.</div>')}
 function addRsn(){var t=$("r1").value.trim();if(!t)return;S.reasons.push({t:t});save();$("r1").value="";render()}
 function delRsn(i){S.reasons.splice(i,1);save();render()}
 function renderRsn(){$("rl").innerHTML=S.reasons.length?S.reasons.map(function(r,i){return '<div class="it"><div>'+esc(r.t)+'</div><button class="x" aria-label="Удалить" onclick="delRsn('+i+')">✕</button></div>'}).join(""):'<div class="mu">Пока пусто.</div>'}
