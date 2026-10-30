@@ -40,7 +40,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 </head>
 <body>
 <div id="app">
-<div class="top"><div><h1 class="hf" style="font-size:34px" id="ttl">Heatbreak</h1><div class="bar" style="margin-bottom:0"></div></div><button class="av" aria-label="Профиль" onclick="go('prof')" id="avb"></button></div>
+<div class="top"><div><h1 class="hf" style="font-size:34px" id="ttl">Heatbreak</h1><div class="bar" style="margin-bottom:0"></div></div><div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="go('prof')"><div style="text-align:right;font-size:12px;line-height:1.25;color:var(--mu);max-width:110px"><div>это ты,</div><div id="whon" style="color:var(--fg);font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div></div><button class="av" aria-label="Профиль" id="avb"></button></div></div>
 
 <section class="v on" id="v-home">
 <div class="card" id="hint" style="border-color:var(--red)"><div class="hf" style="font-size:18px">Как это работает</div><div class="mu" style="margin:6px 0 10px">1. Тянет написать ей или проверить онлайн? Жми красную кнопку, я помогу переждать.<br>2. Вкладка «Карта» покажет, в какие часы тебя накрывает.<br>3. Причины расставания запиши на главной, они пригодятся в тяжёлый момент. В «Циклах» веди историю отношений.</div><button class="btn o" style="min-height:44px;font-size:16px;margin:0" onclick="hideHint()">Понятно</button></div>
@@ -131,7 +131,7 @@ nav button{flex:1;min-height:56px;background:none;border:0;color:var(--mu);font:
 <input id="onick" maxlength="20" placeholder="Придумай ник"><button class="btn" onclick="start()">Погнали</button></div>
 
 <div class="ov" id="rs"><h1 class="hf" style="font-size:36px;margin-top:20px">Переждём 2 минуты</h1><div class="bar"></div>
-<div style="height:250px;display:flex;align-items:center;justify-content:center"><div class="circ" id="circ"><span id="bl">Готов?</span></div></div><div class="mu" id="tip" style="text-align:center"></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin:10px 0"><svg id="pix" viewBox="0 0 100 100" width="230" height="230" role="img" aria-label="Пиксельное сердце заполняется на вдохе и пустеет на выдохе"></svg><div class="hf" style="font-size:44px" id="bl">Готов?</div><div class="hf" style="font-size:30px;color:var(--red)" id="bs"></div><div class="mu" style="font-size:16px" id="tm">2:00</div></div><div class="mu" id="tip" style="text-align:center"></div>
 <div class="card"><div class="hf" style="font-size:18px">Твои причины</div><div class="mu" id="rr"></div></div>
 <button class="btn o" onclick="closeRs()">Закрыть</button></div>
 
@@ -176,8 +176,15 @@ function nextPeak(){var p=peaks();if(!p.length)return null;var h=new Date().getH
 function calm(){$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];$("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, запиши их на главной в блоке «Почему мы расстались».";breathe()}
 function urge(){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent=tips[Math.floor(Math.random()*tips.length)];
 $("rr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список причин пока пуст, запиши их на главной в блоке «Почему мы расстались».";breathe();render()}
-var tm=null;function breathe(){clearInterval(tm);var c=$("circ"),l=$("bl"),n=0;function st(){if(n>=24){l.textContent="Готово";c.style.transform="scale(1)";clearInterval(tm);S.breaths++;save();render();return}var i=n%2===0;l.textContent=i?"Вдох":"Выдох";c.style.transform=i?"scale(1.35)":"scale(1)";n++}st();tm=setInterval(st,5000)}
-function closeRs(){clearInterval(tm);$("rs").classList.remove("on")}
+var bt=null,PX=0;
+function pxInit(){var G=["011000110","111101111","111111111","111111111","011111110","001111100","000111000","000010000"],cs=[];G.forEach(function(l,r){for(var c=0;c<9;c++)if(l[c]=="1")cs.push([r,c])});cs.sort(function(a,b){return b[0]-a[0]||a[1]-b[1]});var h="";cs.forEach(function(x,i){h+='<rect id="px'+i+'" x="'+(8+x[1]*9.5)+'" y="'+(13+x[0]*9.5)+'" width="8" height="8" style="fill:var(--h0)"/>'});$("pix").innerHTML=h;PX=cs.length}
+function paint(f){var n=Math.round(PX*f);for(var i=0;i<PX;i++)$("px"+i).style.fill=i<n?"var(--red)":"var(--h0)"}
+function mmss(x){x=Math.max(0,Math.ceil(x));return Math.floor(x/60)+":"+("0"+x%60).slice(-2)}
+function breathe(){clearInterval(bt);if(!PX)pxInit();var t0=Date.now(),T=120,ph=-1;paint(0);
+function tick(){var e=(Date.now()-t0)/1000;if(e>=T){clearInterval(bt);$("bl").textContent="Готово";$("bs").textContent="";$("tm").textContent="0:00";paint(1);S.breaths++;save();render();return}
+var p=Math.floor(e/5)%2,w=(e%5)/5;if(p!==ph){ph=p;$("bl").textContent=p?"Выдох":"Вдох"}$("bs").textContent=Math.ceil(5-e%5);paint(p?1-w:w);$("tm").textContent=mmss(T-e)}
+tick();bt=setInterval(tick,100)}
+function closeRs(){clearInterval(bt);$("rs").classList.remove("on")}
 function slipOpen(){$("slr").innerHTML=S.reasons.slice(-3).map(function(r){return "• "+esc(r.t)}).join("<br>")||"Список пока пуст. Запиши причины на главной.";$("sl").classList.add("on")}
 function slip(b){S.since=Date.now();save();$("sl").classList.remove("on");render();if(b){S.urges.push(Date.now());save();$("rs").classList.add("on");$("tip").textContent="Дыши. Это пройдёт.";$("rr").textContent="";breathe()}}
 
@@ -244,7 +251,7 @@ function applyTheme(){document.documentElement.setAttribute("data-theme",S.theme
 function theme(){S.theme=S.theme==="light"?"dark":"light";save();applyTheme()}
 function saveTg(){S.tg=$("tg").value.trim();save();renderNear()}
 function renderNear(){$("tg").value=S.tg;var u=S.tg;$("tgl").innerHTML=!u?"":/^https?:\/\//.test(u)?'<a href="'+esc(u)+'" target="_blank" rel="noopener" style="color:var(--red)">Открыть: '+esc(u)+'</a>':/^[+\d][\d\s()-]{5,}$/.test(u)?'<a href="tel:'+esc(u.replace(/[^+\d]/g,""))+'" style="color:var(--red)">Позвонить: '+esc(u)+'</a>':esc(u)}
-function render(){applyTheme();renderNear();$("ttl").textContent=APP;document.title=APP;$("avb").innerHTML=avHTML();renderHome();renderMap();renderCyc();renderRsn();renderProf();if(!S.nick)$("ob").classList.add("on")}
+function render(){applyTheme();$("whon").textContent=S.nick;renderNear();$("ttl").textContent=APP;document.title=APP;$("avb").innerHTML=avHTML();renderHome();renderMap();renderCyc();renderRsn();renderProf();if(!S.nick)$("ob").classList.add("on")}
 (function(){try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");x.fillStyle="#0b0b0b";x.fillRect(0,0,180,180);var G=["011000110","111101111","111111111","111111111","011111110","001111100","000111000","000010000"],CR={"2_4":1,"3_5":1,"4_4":1,"5_5":1,"6_4":1};
 G.forEach(function(l,r){for(var k=0;k<9;k++)if(l[k]=="1"&&!CR[r+"_"+k]){x.fillStyle=r<=2?"#ff3b2f":r<=4?"#c92a20":r<=6?"#8a1c15":"#5a1511";x.fillRect(19+k*16,24+r*16,14,14)}});
 var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}})();
